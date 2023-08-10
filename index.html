@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RA_RNTI Calculator</title>
+    <style>
+        /* Set the width of the input fields */
+        input[type="number"] {
+            width: 50px;
+        }
+        /* Add some margin between labels and input fields */
+        label {
+            margin-right: 10px;
+        }
+        /* Add some margin between buttons and the result display */
+        #execute-program1, #execute-program2 {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>RA_RNTI Calculator</h1>
+	<p>Author: Dustin Chen, email: <a href="mailto:Dustin_Chen@compal.com">Dustin_Chen@compal.com</a></p>
+	<br>● Ref: 38 211 Table 6.3.3.2-3 & 5.3.2  OFDM baseband signal generation for PRACH 
+	<br><br>RA-RNTI = 1 + s_id + 14 × t_id + 14 × 80 × f_id + 14 × 80 × 8 × ul_carrier_id
+	<br><br>&nbsp; &nbsp; s_id : first OFDM symbol of the PRACH occasion (0 ≤ s_id < 14)
+	<br>&nbsp; &nbsp; t_id : first slot of the PRACH occasion in a system frame (0 ≤ t_id < 80), where the subcarrier spacing to determine t_id is based on the value of μ specified in clause 5.3.2 in TS 38.211
+	<br>&nbsp; &nbsp; f_id : PRACH occasion in the frequency domain (0 ≤ f_id < 8)
+	<br>&nbsp; &nbsp; ul_carrier_id : the UL carrier used for Random Access Preamble transmission (0 for NUL carrier, and 1 for SUL carrier)  
+	
+    <h2>Program  1: calculate RA_RNTI</h2>
+    <form id="program1-form">
+        <label for="s_id">s_id (0 ≤ s_id < 14):</label>
+        <input type="number" id="s_id" required><br>
+        <label for="t_id">t_id (0 ≤ t_id < 80):</label>
+        <input type="number" id="t_id" required><br>
+        <label for="f_id">f_id (0 ≤ f_id < 8):</label>
+        <input type="number" id="f_id" required><br>
+        <label for="ul_carrier_id">ul_carrier_id (0 for NUL carrier, 1 for SUL carrier):</label>
+        <input type="number" id="ul_carrier_id" required><br>
+        <button type="button" id="execute-program1">Calculate</button>
+    </form>
+
+    <div id="result-program1"></div>
+
+    <h2>Program  2: calculate (s_id, t_id, f_id, ul_carrier_id)</h2>
+    <form id="program2-form">
+        <label for="RA_RNTI">RA_RNTI:</label>
+        <input type="number" id="RA_RNTI" required><br>
+        <button type="button" id="execute-program2">Calculate</button>
+    </form>
+
+    <div id="result-program2"></div>
+
+    <script>
+        function calculate_RA_RNTI(s_id, t_id, f_id, ul_carrier_id) {
+            return 1 + s_id + 14 * t_id + 14 * 80 * f_id + 14 * 80 * 8 * ul_carrier_id;
+        }
+
+        function calculate_s_t_f(RA_RNTI) {
+            for (var s_id = 0; s_id < 14; s_id++) {
+                for (var t_id = 0; t_id < 80; t_id++) {
+                    for (var f_id = 0; f_id < 8; f_id++) {
+                        for (var ul_carrier_id = 0; ul_carrier_id < 2; ul_carrier_id++) {
+                            if (RA_RNTI == 1 + s_id + 14 * t_id + 14 * 80 * f_id + 14 * 80 * 8 * ul_carrier_id) {
+                                return [s_id, t_id, f_id, ul_carrier_id];
+                            }
+                        }
+                    }
+                }
+            }
+            return [null, null, null, null];
+        }
+
+        document.getElementById("execute-program1").addEventListener("click", function() {
+            var s_id = parseFloat(document.getElementById("s_id").value);
+            var t_id = parseFloat(document.getElementById("t_id").value);
+            var f_id = parseFloat(document.getElementById("f_id").value);
+            var ul_carrier_id = parseFloat(document.getElementById("ul_carrier_id").value);
+
+            var RA_RNTI = calculate_RA_RNTI(s_id, t_id, f_id, ul_carrier_id);
+            document.getElementById("result-program1").textContent = "Calculate RA_RNTI = " + RA_RNTI;
+        });
+
+        document.getElementById("execute-program2").addEventListener("click", function() {
+            var RA_RNTI = parseFloat(document.getElementById("RA_RNTI").value);
+
+            var [s_id, t_id, f_id, ul_carrier_id] = calculate_s_t_f(RA_RNTI);
+
+            if (s_id !== null && t_id !== null && f_id !== null && ul_carrier_id !== null) {
+                document.getElementById("result-program2").textContent = "Calculate (s_id, t_id, f_id, ul_carrier_id) = (" + s_id + ", " + t_id + ", " + f_id + ", " + ul_carrier_id + ")";
+            } else {
+                document.getElementById("result-program2").textContent = "No valid (s_id, t_id, f_id, ul_carrier_id) found for the given RA_RNTI.";
+            }
+        });
+    </script>
+</body>
+</html>
