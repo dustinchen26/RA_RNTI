@@ -9,6 +9,9 @@
 <head>
     <title>RA_RNTI Calculator</title>
     <style>
+        body {
+			font-family: 'Arial', sans-serif; /* 使用Arial字體或類似字體 */		
+        }		
         /* Set the width of the input fields */
         input[type="number"] {
             width: 50px;
@@ -21,6 +24,10 @@
         #execute-program1, #execute-program2 {
             margin-top: 10px;
         }
+        /* 將特定文本設置為藍色 */
+        .blue-text {
+            color: blue;
+        }				
     </style>
 </head>
 <body>
@@ -29,37 +36,50 @@
 	<p>Author: Dustin Chen, email: <a href="mailto:Dustin_Chen@compal.com">Dustin_Chen@compal.com</a></p>
 -->	
 	<p style="margin: 0;">Author: Dustin_Chen, email: <a href="mailto:Dustin_Chen@compal.com" style="line-height: 1;">Dustin_Chen@compal.com</a> or <a href="mailto:chuhpsdustin@gmail.com" style="line-height: 1;">chuhpsdustin@gmail.com</a></p>
+
+<h3> ● Ref: 38 211 Table 6.3.3.2-3 & 5.3.2  OFDM baseband signal generation for PRACH</h3>
+<ul> 
+	<em>RA-RNTI = 1 + s_id + 14 × t_id + 14 × 80 × f_id + 14 × 80 × 8 × ul_carrier_id</em> 
+		<ul>
+			<br>
+			<li> s_id : first OFDM symbol of the PRACH occasion (0 ≤ s_id < 14)	</li>
+			<li> t_id : first slot of the PRACH occasion in a system frame (0 ≤ t_id < 80), where the subcarrier spacing to determine t_id is based on the value of μ specified in clause 5.3.2 in TS 38.211	</li>
+			<li> f_id : PRACH occasion in the frequency domain (0 ≤ f_id < 8)	</li>
+			<li> ul_carrier_id : the UL carrier used for Random Access Preamble transmission (0 for NUL carrier, and 1 for SUL carrier) 	</li>		
+		</ul>
+</ul>
 	
-	<br>● Ref: 38 211 Table 6.3.3.2-3 & 5.3.2  OFDM baseband signal generation for PRACH 
-	<br><br>RA-RNTI = 1 + s_id + 14 × t_id + 14 × 80 × f_id + 14 × 80 × 8 × ul_carrier_id
-	<br><br>&nbsp; &nbsp; s_id : first OFDM symbol of the PRACH occasion (0 ≤ s_id < 14)
-	<br>&nbsp; &nbsp; t_id : first slot of the PRACH occasion in a system frame (0 ≤ t_id < 80), where the subcarrier spacing to determine t_id is based on the value of μ specified in clause 5.3.2 in TS 38.211
-	<br>&nbsp; &nbsp; f_id : PRACH occasion in the frequency domain (0 ≤ f_id < 8)
-	<br>&nbsp; &nbsp; ul_carrier_id : the UL carrier used for Random Access Preamble transmission (0 for NUL carrier, and 1 for SUL carrier)  
-	
-    <h2>Program  1: calculate RA_RNTI</h2>
-    <form id="program1-form">
+    <h3>(1) calculate RA_RNTI</h3>
+<ul>
+    <li>
         <label for="s_id">s_id (0 ≤ s_id < 14):</label>
-        <input type="number" id="s_id" required><br>
+        <input type="number" id="s_id" required value="0" ><br>
+    </li>
+    <li>
         <label for="t_id">t_id (0 ≤ t_id < 80):</label>
-        <input type="number" id="t_id" required><br>
+        <input type="number" id="t_id" required value="19" ><br>
+    </li>	
+    <li>
         <label for="f_id">f_id (0 ≤ f_id < 8):</label>
-        <input type="number" id="f_id" required><br>
+        <input type="number" id="f_id" required value="0" ><br>
+    </li>	
+    <li>
         <label for="ul_carrier_id">ul_carrier_id (0 for NUL carrier, 1 for SUL carrier):</label>
-        <input type="number" id="ul_carrier_id" required><br>
-        <button type="button" id="execute-program1">Calculate</button>
-    </form>
+        <input type="number" id="ul_carrier_id" required value="0" ><br>
+    </li>	
+    <button type="button" id="execute-program1">Calculate</button>
+    <span class="blue-text"><div id="result-program1"></div></span>
+</ul>
+    <h3>(2) calculate (s_id, t_id, f_id, ul_carrier_id)</h3>
 
-    <div id="result-program1"></div>
-
-    <h2>Program  2: calculate (s_id, t_id, f_id, ul_carrier_id)</h2>
-    <form id="program2-form">
+<ul>
+    <li>
         <label for="RA_RNTI">RA_RNTI:</label>
-        <input type="number" id="RA_RNTI" required><br>
-        <button type="button" id="execute-program2">Calculate</button>
-    </form>
-
-    <div id="result-program2"></div>
+        <input type="number" id="RA_RNTI" required value="267" ><br>
+    </li>
+    <button type="button" id="execute-program2">Calculate</button>	
+	<span class="blue-text"><div id="result-program2"></div></span>	
+</ul>
 
     <script>
         function calculate_RA_RNTI(s_id, t_id, f_id, ul_carrier_id) {
